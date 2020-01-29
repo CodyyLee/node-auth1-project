@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/CodyyLee/node-auth1-project#readme",
   "dependencies": {
+    "express-session": "^1.17.0",
     "nodemon": "^2.0.2"
   }
 }

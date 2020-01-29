@@ -7,11 +7,14 @@ const Users = require('../users/users-model.js');
 router.post('/login', (req, res) => {
     const user = req.body;
 
+    req.session.name = 'MySession';
+    res.send('sent');
+
     Users.getUser(user.username)
         .first()
         .then(user => {
             if(user && bc.compareSync(req.body.password, user.password)) {
-                res.status(200).json(`Welcome, ${user.username}!`);
+                res.status(200).json(user);
             }
             else {
                 res.status(400).json({
@@ -45,5 +48,34 @@ router.post('/register', (req, res) => {
             })
         })
 })
+
+router.get('/users', myFunc(), (req, res) => {
+    Users.getAll()
+        .then(users => {
+            res.status(200).json(users);
+        })
+        .catch(err => {
+            res.status(500).json({
+                errorMessage: "There was an error getting users."
+            })
+        })
+})
+
+function myFunc() {
+    return function (req, res, next) {
+        Users.getUser(req.body.username)
+            .first()
+            .then(user => {
+                if(req.session.cookie) {
+                    next();
+                }
+                else {
+                    res.status(400).json({
+                        errorMessage: "Invalid credentials."
+                    })
+                }
+            })
+    }
+}
 
 module.exports = router;

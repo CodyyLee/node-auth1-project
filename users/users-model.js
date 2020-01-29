@@ -2,7 +2,8 @@ const db = require('../database/dbConfig.js');
 
 module.exports = {
     add,
-    getUser
+    getUser,
+    getAll
 };
 
 function add(user) {
@@ -11,4 +12,8 @@ function add(user) {
 
 function getUser(username) {
     return db('users').select('id', 'username', 'password').where('username', username);
+}
+
+function getAll() {
+    return db('users');
 }
